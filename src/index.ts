@@ -2,8 +2,13 @@
 
 import { log, LoggerType, LoggerCode } from "./logger";
 import { readFileSync, writeFileSync } from "fs";
-import { AbstractSyntaxTree } from "./tokens";
-import { abstractSyntaxTree, generateCode } from "./compiler";
+import { Token } from "./token";
+import {
+  abstractSyntaxTree,
+  generateCode,
+  tokenizer,
+  transformer,
+} from "./compiler";
 import chalk from "chalk";
 
 main();
@@ -38,12 +43,17 @@ function main(): void {
       return;
     }
 
-    var tokens: AbstractSyntaxTree;
+    var ast: Token;
     var output: string = "";
+    var tokens: Token[] = [];
+    var newAst: Token;
 
     try {
-      tokens = abstractSyntaxTree(input);
-      output = generateCode(tokens);
+      tokens = tokenizer(input);
+      ast = abstractSyntaxTree(tokens);
+
+      newAst = transformer(ast);
+      output = generateCode(newAst);
     } catch (e) {
       log(
         `There was an error compiling; this may not be a problem with your code (More Information: ${chalk.black.bgWhite(
