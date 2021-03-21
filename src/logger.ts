@@ -1,7 +1,7 @@
 import chalk from "chalk";
 
 export function log(text: string, type: LoggerType, code: LoggerCode) {
-  var color: chalk.Chalk = chalk.blue;
+  var color: chalk.Chalk = chalk.green;
   switch (type) {
     case LoggerType.WARN:
       color = chalk.yellow;
@@ -11,7 +11,7 @@ export function log(text: string, type: LoggerType, code: LoggerCode) {
       break;
   }
 
-  console.log(color(`[${type}] ${text}:\n{${code}}`));
+  console.log(color(`[${type}] ${text}\n{${code}}`));
 }
 
 export enum LoggerType {
@@ -24,4 +24,5 @@ export enum LoggerCode {
   GOOD = "GOOD",
   INVALID_INPUT_OR_OUTPUT_FILE = "INVALID_INPUT_OR_OUTPUT_FILE",
   FS_PROBLEM = "FS_PROBLEM",
+  COMPILE_ERROR = "COMPILE_ERROR",
 }

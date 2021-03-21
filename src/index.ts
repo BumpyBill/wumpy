@@ -3,37 +3,72 @@
 import { log, LoggerType, LoggerCode } from "./logger/logger";
 import { readFileSync, writeFileSync } from "fs";
 import { AbstractSyntaxTree } from "./tokens";
+import { abstractSyntaxTree, generateCode } from "./compiler";
+import chalk from "chalk";
 
-const inputFile: string | null = process.argv[2];
-const outputFile: string | null = process.argv[3];
+main();
 
-if (!inputFile || !outputFile) {
-  log(
-    "Invalid input/output file",
-    LoggerType.ERROR,
-    LoggerCode.INVALID_INPUT_OR_OUTPUT_FILE
-  );
-} else {
-  var input: string = "";
-  try {
-    input = readFileSync(inputFile, "utf8");
-  } catch (e) {
+function main(): void {
+  const inputFile: string | null = process.argv[2];
+  const outputFile: string | null = process.argv[3];
+
+  if (!inputFile || !outputFile) {
     log(
-      "There was an error reading the input file; this might be because the file does not exist",
+      `Invalid input/output file; please provide an input and output, ie: ${chalk.black.bgWhite(
+        " wumpy main.wumpy main.asm "
+      )}`,
       LoggerType.ERROR,
-      LoggerCode.FS_PROBLEM
+      LoggerCode.INVALID_INPUT_OR_OUTPUT_FILE
     );
+
+    return;
+  } else {
+    var input: string = "";
+    try {
+      input = readFileSync(inputFile, "utf8");
+    } catch (e) {
+      log(
+        `There was an error reading the input file; this might be because the file does not exist (More Information: ${chalk.black.bgWhite(
+          e.message
+        )})`,
+        LoggerType.ERROR,
+        LoggerCode.FS_PROBLEM
+      );
+
+      return;
+    }
+
+    var tokens: AbstractSyntaxTree;
+    var output: string = "";
+
+    try {
+      tokens = abstractSyntaxTree(input);
+      output = generateCode(tokens);
+    } catch (e) {
+      log(
+        `There was an error compiling; this may not be a problem with your code (More Information: ${chalk.black.bgWhite(
+          e.message
+        )})`,
+        LoggerType.ERROR,
+        LoggerCode.COMPILE_ERROR
+      );
+
+      return;
+    }
+
+    try {
+      writeFileSync(outputFile, output);
+      log(chalk.bold("Finished compiling"), LoggerType.LOG, LoggerCode.GOOD);
+    } catch (e) {
+      log(
+        `There was an error writing to the output file (More Information: ${chalk.black.bgWhite(
+          e.message
+        )})`,
+        LoggerType.ERROR,
+        LoggerCode.FS_PROBLEM
+      );
+
+      return;
+    }
   }
-
-  const tokens: AbstractSyntaxTree = abstractSyntaxTree(input);
-  const output: string = generateCode(tokens);
-
-  writeFileSync(outputFile, output);
-}
-function abstractSyntaxTree(input: string): AbstractSyntaxTree {
-  throw new Error("Function not implemented.");
-}
-
-function generateCode(tokens: AbstractSyntaxTree): string {
-  throw new Error("Function not implemented.");
 }
