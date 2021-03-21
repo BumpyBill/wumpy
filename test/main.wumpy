@@ -1,0 +1,13 @@
+void main(int argc, string[] argv) {
+    for(i in range(0,100)) { // Range returns a list
+        if(i / 15 == 0) {
+            console.log("FizzBuzz")
+        } elif(i / 3 == 0) {
+            console.log("Fizz")
+        } elif(i / 5 == 0) {
+            console.log("Buzz")
+        } else {
+            console.log(i)
+        }
+    }
+}

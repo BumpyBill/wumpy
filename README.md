@@ -1,2 +1,0 @@
-# wumpy
-wumpy OS
