@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { log, LoggerType, LoggerCode } from "./logger/logger";
+import { log, LoggerType, LoggerCode } from "./logger";
 import { readFileSync, writeFileSync } from "fs";
 import { AbstractSyntaxTree } from "./tokens";
 import { abstractSyntaxTree, generateCode } from "./compiler";
@@ -15,7 +15,7 @@ function main(): void {
   if (!inputFile || !outputFile) {
     log(
       `Invalid input/output file; please provide an input and output, ie: ${chalk.black.bgWhite(
-        " wumpy main.wumpy main.asm "
+        "wumpy main.wumpy main.asm"
       )}`,
       LoggerType.ERROR,
       LoggerCode.INVALID_INPUT_OR_OUTPUT_FILE
